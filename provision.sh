@@ -18,7 +18,7 @@ apt-get install -y git vim wget curl drush debconf-utils >/dev/null 2>&1
 # Install Apache
 echo "Installing Apache"
 apt-get install -y apache2 >/dev/null 2>&1
-/bin/cp /vagrant/files/default /etc/apache2/sites-available/default
+/bin/cp /vagrant/files/etc_apache2_sites-available/default /etc/apache2/sites-available/default
 service apache2 restart
 
 
@@ -32,6 +32,13 @@ echo "Installing MySQL with root password 'rootpw'"
 echo 'mysql-server mysql-server/root_password password rootpw' | debconf-set-selections
 echo 'mysql-server mysql-server/root_password_again password rootpw' | debconf-set-selections
 apt-get install -y mysql-server >/dev/null 2>&1
+
+
+# Install Solr
+echo "Installing Apache Solr"
+apt-get install -y solr-jetty >/dev/null 2>&1
+/bin/cp /vagrant/files/etc_default/jetty /etc/default/jetty
+service jetty restart
 
 
 # Install luggage
