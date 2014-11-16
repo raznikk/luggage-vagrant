@@ -6,6 +6,10 @@ This system has been built to help in Luggage development and to give DevOps a s
 
 Since vagrant has so many back-end virtualization options, this may end up becoming a large part of a docker container setup.
 
+## Prerequisites
+  * VirtualBox - https://www.virtualbox.org/wiki/Downloads
+  * Vagrant - https://www.vagrantup.com/
+
 ## Installation
   * clone this repo
   * ```cd ./luggage-vagrant```
