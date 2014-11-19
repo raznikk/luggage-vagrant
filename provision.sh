@@ -36,9 +36,18 @@ apt-get install -y mysql-server >/dev/null 2>&1
 
 # Install Solr
 echo "Installing Apache Solr"
-apt-get install -y solr-jetty >/dev/null 2>&1
-/bin/cp /vagrant/files/etc_default/jetty /etc/default/jetty
-service jetty restart
+pushd /tmp
+wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.tgz
+	pushd /var
+		tar xzvf /tmp/apache-solr-3.6.2.tgz 
+	popd
+
+	pushd /var/apache-solr-3.6.2/
+		cp -R /var/luggage/sites/all/modules/apachesolr/solr-conf/solr-3.x/* ./example/solr/conf
+	popd
+popd
+
+
 
 
 # Install luggage
