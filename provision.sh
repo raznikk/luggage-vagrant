@@ -63,16 +63,16 @@ pushd /var/luggage
 popd
 
 
-echo "... installing the drupal system"
-pushd /var/luggage
-	drush site-install -qy minimal --db-url=mysql://root:rootpw@localhost/drupal
-popd
+# echo "... installing the drupal system"
+# pushd /var/luggage
+#	drush site-install -qy minimal --db-url=mysql://root:rootpw@localhost/drupal
+# popd
 
 
-echo "... building luggage"
-pushd /var/luggage
-	DBCREDS="root:rootpw" /bin/bash ./scripts/build_luggage.sh
-popd
+# echo "... building luggage"
+# pushd /var/luggage
+#	DBCREDS="root:rootpw" /bin/bash ./scripts/build_luggage.sh
+# popd
 
 
 touch /var/vagrant_provision
