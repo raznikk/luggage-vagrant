@@ -12,8 +12,10 @@ apt-get update >/dev/null 2>&1
 
 # Install Git
 echo "Installing Necessary utilities (git, curl, wget, drush)"
-apt-get install -y git vim wget curl drush debconf-utils >/dev/null 2>&1
-
+apt-get install -y git vim wget php-pear debconf-utils >/dev/null 2>&1
+echo "Installing Drush 5.10"
+pear channel-discover pear.drush.org
+pear install drush/drush-5.10.0.0
 
 # Install Apache
 echo "Installing Apache"
