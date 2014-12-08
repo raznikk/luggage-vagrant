@@ -10,10 +10,12 @@ echo "Updating the system..."
 apt-get update >/dev/null 2>&1
 
 
-# Install Git
-echo "Installing Necessary utilities (git, curl, wget, drush)"
-apt-get install -y git vim wget curl drush debconf-utils >/dev/null 2>&1
-
+# Install utilities
+echo "Installing Necessary utilities (git, wget)"
+apt-get install -y git vim nano wget php-pear debconf-utils >/dev/null 2>&1
+echo "Installing Drush5.10"
+pear channel-discover pear.drush.org
+pear install drush/drush-5.10.0.0
 
 # Install Apache
 echo "Installing Apache"
@@ -21,11 +23,9 @@ apt-get install -y apache2 >/dev/null 2>&1
 /bin/cp /vagrant/files/etc_apache2_sites-available/default /etc/apache2/sites-available/default
 service apache2 restart
 
-
 # Install PHP
 echo "Installing PHP"
-apt-get install -y php5 php5-cli php5-mysql php5-gd >/dev/null 2>&1
-
+apt-get install -y php5 php5-cli php5-common php5-mysql php5-gd >/dev/null 2>&1
 
 # Install MySQL
 echo "Installing MySQL with root password 'rootpw'"
@@ -33,46 +33,29 @@ echo 'mysql-server mysql-server/root_password password rootpw' | debconf-set-sel
 echo 'mysql-server mysql-server/root_password_again password rootpw' | debconf-set-selections
 apt-get install -y mysql-server >/dev/null 2>&1
 
-
 # Install Solr
-echo "Installing Apache Solr"
-apt-get install -y solr-jetty >/dev/null 2>&1
-/bin/cp /vagrant/files/etc_default/jetty /etc/default/jetty
-service jetty restart
-
+# echo "Installing Apache Solr"
+# apt-get install -y solr-jetty >/dev/null 2>&1
+# /bin/cp /vagrant/files/etc_default/jetty /etc/default/jetty
+# service jetty restart
 
 # Install luggage
 echo "Installing Luggage..."
-echo "... removing /var/www directory"
-rm -rf /var/www
-
-
-echo "... downloading luggage to /var/luggage"
+echo "... changing to /var directory"
 pushd /var
-/usr/bin/git clone https://github.com/isubit/luggage.git
+  echo "... removing native /var/www"
+  rm -Rf /var/www
+  echo "... downloading luggage to /var/www"
+  /usr/bin/git clone https://github.com/isubit/luggage.git www
+
+  echo "... changing to ./www directory"
+  cd www
+  echo "... modifying .gitmodules file to use https:// rather than ssh:// for submodule pull"
+  sudo /bin/sed -i 's/git@github.com:/https:\/\/github.com\//' /var/www/.gitmodules
+  echo "... making build script executable"
+  sudo chmod a+x ./scripts/build_luggage.sh
+  echo "... running build script"
+  APACHEUSER="www-data" DBCREDS="root:rootpw" /bin/bash ./scripts/build_luggage.sh
 popd
-
-
-echo "... linking /var/luggage to /var/www"
-ln -sf /var/luggage /var/www
-
-
-echo "... modifying .gitmodules file to use https:// rather than ssh:// for submodule pull"
-pushd /var/luggage
-	/bin/sed -i 's/git@github.com:/https:\/\/github.com\//' /var/luggage/.gitmodules
-popd
-
-
-# echo "... installing the drupal system"
-# pushd /var/luggage
-#	drush site-install -qy minimal --db-url=mysql://root:rootpw@localhost/drupal
-# popd
-
-
-# echo "... building luggage"
-# pushd /var/luggage
-#	DBCREDS="root:rootpw" /bin/bash ./scripts/build_luggage.sh
-# popd
-
 
 touch /var/vagrant_provision
