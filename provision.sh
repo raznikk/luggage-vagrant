@@ -12,7 +12,7 @@ apt-get update >/dev/null 2>&1
 
 # Install Git
 echo "Installing Necessary utilities (git, curl, wget, drush)"
-apt-get install -y git vim wget curl drush debconf-utils >/dev/null 2>&1
+apt-get install -y git vim wget curl drush debconf-utils openjdk-7-jre-headless >/dev/null 2>&1
 
 
 # Install Apache
@@ -37,14 +37,16 @@ apt-get install -y mysql-server >/dev/null 2>&1
 # Install Solr
 echo "Installing Apache Solr"
 pushd /tmp
-wget https://archive.apache.org/dist/lucene/solr/3.6.2/apache-solr-3.6.2.tgz
+wget https://archive.apache.org/dist/lucene/solr/4.10.2/solr-4.10.2.tgz
 	pushd /var
-		tar xzvf /tmp/apache-solr-3.6.2.tgz 
+		tar xzvf /tmp/solr-4.10.2.tgz 
 	popd
 
-	pushd /var/apache-solr-3.6.2/
-		cp -R /var/luggage/sites/all/modules/apachesolr/solr-conf/solr-3.x/* ./example/solr/conf
+	pushd /var/solr-4.10.2/
+		cp -R /var/luggage/sites/all/modules/apachesolr/solr-conf/solr-4.x/* ./example/solr/conf
 	popd
+
+	/var/solr-4.10.2/bin/solr start -p 8983
 popd
 
 
